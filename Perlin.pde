@@ -7,13 +7,13 @@ int WIDTH = 1000;
 int HEIGHT = 800;
 
 //User controllable flags and values
-float SEED = 2.61;
+float SEED = 0.01;
 int TAIL_LENGTH = 2;
 int X_BOUND = WIDTH;
 int Y_BOUND = HEIGHT;
 int Z_BOUND = HEIGHT;
 float SPEED = 4;
-float ATTENUATION = 0.003;
+float ATTENUATION = 0.0001;
 boolean DEBUG = false;
 boolean BOUNDED = false;
 boolean MONOCHROME = false;
@@ -288,16 +288,25 @@ class Particle {
     velocity.x = SPEED*cos(TWO_PI*noise(noise.x,noise.y,noise.z)*SEED);
     velocity.y = SPEED*sin(TWO_PI*noise(noise.x,noise.y,noise.z)*SEED);
     velocity.z = SPEED*atan(TWO_PI*noise(noise.x,noise.y,noise.z)*SEED);
-    position.add(velocity);
     lines.add(new Line(position.x, position.y, position.z, position.x+velocity.x, position.y+velocity.y, position.z+velocity.z));
-    lifespan--;
-    
-    if (sqrt(pow((position.x - width/2),2) + pow((position.y - height/2),2) + pow((position.z - height/2),2)) < 40){
-//      velocity.x += 50;
-      print("Near middle\n"); 
-      velocity.y *= 50;
-//      velocity.z += 50;
+//    lifespan--;
+    PVector particle = new PVector (X_BOUND/2,Y_BOUND/2,Z_BOUND/2);
+    if (sqrt(pow((position.x - WIDTH/2),2) + 
+    pow((position.y - HEIGHT/2),2) + 
+    pow((position.z - HEIGHT/2),2)) < 280){
+      
+        PVector direction = new PVector(velocity.x,velocity.y,velocity.z);
+        direction.sub(position);
+        PVector normal = new PVector(position.x,position.y,position.z);
+        normal.sub(particle);
+        normal.normalize();
+        normal.mult(2 * direction.dot(normal));
+        direction.sub(normal);
+        direction.normalize();
+        velocity.mult(direction);
     }
+    
+    position.add(velocity);
     
     //###################################################
     //If the particles are BOUNDED, send the to the opposite site of
