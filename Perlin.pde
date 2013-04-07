@@ -289,22 +289,7 @@ class Particle {
     velocity.y = SPEED*sin(TWO_PI*noise(noise.x,noise.y,noise.z)*SEED);
     velocity.z = SPEED*atan(TWO_PI*noise(noise.x,noise.y,noise.z)*SEED);
     lines.add(new Line(position.x, position.y, position.z, position.x+velocity.x, position.y+velocity.y, position.z+velocity.z));
-//    lifespan--;
-    PVector particle = new PVector (X_BOUND/2,Y_BOUND/2,Z_BOUND/2);
-    if (sqrt(pow((position.x - WIDTH/2),2) + 
-    pow((position.y - HEIGHT/2),2) + 
-    pow((position.z - HEIGHT/2),2)) < 280){
-      
-        PVector direction = new PVector(velocity.x,velocity.y,velocity.z);
-        direction.sub(position);
-        PVector normal = new PVector(position.x,position.y,position.z);
-        normal.sub(particle);
-        normal.normalize();
-        normal.mult(2 * direction.dot(normal));
-        direction.sub(normal);
-        direction.normalize();
-        velocity.mult(direction);
-    }
+    lifespan--;
     
     position.add(velocity);
     
